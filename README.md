@@ -1,7 +1,7 @@
 - 👋 Hi, I’m luciano
 - 👀 I’m interested in python
 - 🌱 I’m currently learning the world of python
-- 💞️ I’m looking to collaborate on ...
+- 💞️ I’m looking to collaborate on python
 - 📫 How to reach me through email
 - 😄 Pronouns: lucho
 - ⚡ Fun fact: ...
