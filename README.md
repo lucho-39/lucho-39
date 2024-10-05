@@ -1,8 +1,8 @@
 - 👋 Hi, I’m luciano
 - 👀 I’m interested in HTML JAVASCRIPT
-- 🌱 I’m currently learning the world of python
-- 💞️ I’m looking to collaborate on python
-- 📫 How to reach me through email
+- 🌱 I’m currently learning the world of HTML JAVASCRIPT
+- 💞️ I’m looking to collaborate on HTML JAVASCRIPT
+- 📫 How to reach me through email lucho.lsc46@gmail.com
 - 😄 Pronouns: lucho
 - ⚡ Fun fact: ...
 
