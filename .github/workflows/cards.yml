@@ -11,8 +11,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Declaring any permission sets every permission that is not listed to `none`.
+    # The trophy card queries user issues and pull requests through the GraphQL API,
+    # so those reads have to be granted explicitly or the run fails.
     permissions:
       contents: write
+      issues: read
+      pull-requests: read
 
     steps:
       - uses: actions/checkout@v6
