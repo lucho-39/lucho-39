@@ -1,5 +1,6 @@
 <h1 align="center">Hi 👋, I'm Luciano Santa Cruz</h1>
-<h3 align="center">Full Stack Developer from Argentina</h3>
+<h3 align="center">Full Stack Developer · TypeScript, Python, Svelte</h3>
+<h4 align="center">Website: https://lucho-39.github.io/</h4>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=lucho-39&label=Profile%20views&color=0e75b6&style=flat" alt="lucho-39" /> </p>
 
