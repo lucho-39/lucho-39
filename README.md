@@ -3,8 +3,9 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=lucho-39&label=Profile%20views&color=0e75b6&style=flat" alt="lucho-39" /> </p>
 
-<!-- Trophy card: pending self-hosted Vercel instance. Add back once you have your own domain:
-<p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://TU-PROYECTO.vercel.app/?username=lucho-39" alt="lucho-39" /></a> </p>
+<!-- Trophy card: pending the first successful "Update README cards" workflow run.
+     Enable this line once profile/trophy.svg exists, so the profile never shows a broken image.
+<p align="center"><img src="./profile/trophy.svg" alt="GitHub trophies" /></p>
 -->
 
 - 📫 How to reach me **lucho.lsc46@gmail.com**
