@@ -40,12 +40,28 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fail_on_error: true
 
-      - name: Generate trophy card
-        uses: ryo-ma/github-profile-trophy@v1.0
+      # The upstream v1.0 tag asks for `stargazers { totalCount }`, a connection the
+      # automatic GITHUB_TOKEN is not allowed to read: the API answers FORBIDDEN
+      # "Resource not accessible by integration", returns null nodes and poisons the
+      # whole query. There is no `permissions` key that grants it. master replaced it
+      # with the `stargazerCount` scalar, so run the fixed script from a pinned commit
+      # instead of the released action.
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
         with:
-          username: ${{ github.repository_owner }}
-          output_path: profile/trophy.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
+          deno-version: v1.46.3
+
+      - name: Generate trophy card
+        env:
+          GITHUB_TOKEN1: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TROPHY_SHA=e3c89df995e92e67cdd4b2acaab9d974583dc1f7
+          curl -sSL "https://github.com/ryo-ma/github-profile-trophy/archive/${TROPHY_SHA}.tar.gz" \
+            | tar xz -C "$RUNNER_TEMP"
+          deno run --allow-net --allow-env --allow-read --allow-write \
+            "$RUNNER_TEMP/github-profile-trophy-${TROPHY_SHA}/render_svg.ts" \
+            "${{ github.repository_owner }}" "profile/trophy.svg" "default"
 
       - name: Debug trophy inputs
         if: always()
@@ -53,22 +69,15 @@ jobs:
           GITHUB_TOKEN1: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "token length: ${#GITHUB_TOKEN1}"
-          for name in activity issue pullrequest repository; do
-            case "$name" in
-              activity) Q='query userInfo($username: String!) { user(login: $username) { createdAt contributionsCollection { totalCommitContributions restrictedContributionsCount totalPullRequestReviewContributions } organizations(first: 1) { totalCount } followers(first: 1) { totalCount } } }' ;;
-              issue) Q='query userInfo($username: String!) { user(login: $username) { openIssues: issues(states: OPEN) { totalCount } closedIssues: issues(states: CLOSED) { totalCount } } }' ;;
-              pullrequest) Q='query userInfo($username: String!) { user(login: $username) { pullRequests(first: 1) { totalCount } } }' ;;
-              repository) Q='query userInfo($username: String!) { user(login: $username) { repositories(first: 50, ownerAffiliations: OWNER, orderBy: {direction: DESC, field: STARGAZERS}) { totalCount nodes { languages(first: 3, orderBy: {direction:DESC, field: SIZE}) { nodes { name } } stargazers { totalCount } createdAt } } } }' ;;
-            esac
-            echo "===== $name ====="
-            jq -n --arg q "$Q" '{query:$q, variables:{username:"lucho-39"}}' \
-              | curl -sS -X POST https://api.github.com/graphql \
-                  -H "Authorization: bearer $GITHUB_TOKEN1" \
-                  -H "Content-Type: application/json" \
-                  --data-binary @- \
-              | head -c 1200
-            echo
-          done
+          echo "===== master queryUserAll (stargazerCount, no stargazers connection) ====="
+          Q='query userInfo($username: String!) { user(login: $username) { createdAt contributionsCollection { totalCommitContributions restrictedContributionsCount totalPullRequestReviewContributions } organizations(first: 1) { totalCount } followers(first: 1) { totalCount } openIssues: issues(states: OPEN) { totalCount } closedIssues: issues(states: CLOSED) { totalCount } pullRequests(first: 1) { totalCount } repositories(first: 50, ownerAffiliations: OWNER, orderBy: {direction: DESC, field: STARGAZERS}) { totalCount nodes { languages(first: 2, orderBy: {direction:DESC, field: SIZE}) { nodes { name } } stargazerCount createdAt } } } }'
+          jq -n --arg q "$Q" '{query:$q, variables:{username:"lucho-39"}}' \
+            | curl -sS -X POST https://api.github.com/graphql \
+                -H "Authorization: bearer $GITHUB_TOKEN1" \
+                -H "Content-Type: application/json" \
+                --data-binary @- \
+            | head -c 1500
+          echo
 
       - name: Commit cards
         run: |
