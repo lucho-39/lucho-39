@@ -3,10 +3,7 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=lucho-39&label=Profile%20views&color=0e75b6&style=flat" alt="lucho-39" /> </p>
 
-<!-- Trophy card: pending the first successful "Update README cards" workflow run.
-     Enable this line once profile/trophy.svg exists, so the profile never shows a broken image.
 <p align="center"><img src="./profile/trophy.svg" alt="GitHub trophies" /></p>
--->
 
 - 📫 How to reach me **lucho.lsc46@gmail.com**
 - 🌐 Portfolio: **[lucho-39.github.io](https://lucho-39.github.io/)**
