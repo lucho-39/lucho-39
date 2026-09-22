@@ -53,12 +53,22 @@ jobs:
           GITHUB_TOKEN1: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "token length: ${#GITHUB_TOKEN1}"
-          echo "--- raw GraphQL response with the CI token ---"
-          curl -sS -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer $GITHUB_TOKEN1" \
-            -H "Content-Type: application/json" \
-            -d '{"query":"{ user(login: \"lucho-39\") { createdAt openIssues: issues(states: OPEN) { totalCount } pullRequests(first: 1) { totalCount } } }"}' \
-            | head -c 2000
+          for name in activity issue pullrequest repository; do
+            case "$name" in
+              activity) Q='query userInfo($username: String!) { user(login: $username) { createdAt contributionsCollection { totalCommitContributions restrictedContributionsCount totalPullRequestReviewContributions } organizations(first: 1) { totalCount } followers(first: 1) { totalCount } } }' ;;
+              issue) Q='query userInfo($username: String!) { user(login: $username) { openIssues: issues(states: OPEN) { totalCount } closedIssues: issues(states: CLOSED) { totalCount } } }' ;;
+              pullrequest) Q='query userInfo($username: String!) { user(login: $username) { pullRequests(first: 1) { totalCount } } }' ;;
+              repository) Q='query userInfo($username: String!) { user(login: $username) { repositories(first: 50, ownerAffiliations: OWNER, orderBy: {direction: DESC, field: STARGAZERS}) { totalCount nodes { languages(first: 3, orderBy: {direction:DESC, field: SIZE}) { nodes { name } } stargazers { totalCount } createdAt } } } }' ;;
+            esac
+            echo "===== $name ====="
+            jq -n --arg q "$Q" '{query:$q, variables:{username:"lucho-39"}}' \
+              | curl -sS -X POST https://api.github.com/graphql \
+                  -H "Authorization: bearer $GITHUB_TOKEN1" \
+                  -H "Content-Type: application/json" \
+                  --data-binary @- \
+              | head -c 1200
+            echo
+          done
 
       - name: Commit cards
         run: |
