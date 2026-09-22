@@ -47,6 +47,19 @@ jobs:
           output_path: profile/trophy.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Debug trophy inputs
+        if: always()
+        env:
+          GITHUB_TOKEN1: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "token length: ${#GITHUB_TOKEN1}"
+          echo "--- raw GraphQL response with the CI token ---"
+          curl -sS -X POST https://api.github.com/graphql \
+            -H "Authorization: bearer $GITHUB_TOKEN1" \
+            -H "Content-Type: application/json" \
+            -d '{"query":"{ user(login: \"lucho-39\") { createdAt openIssues: issues(states: OPEN) { totalCount } pullRequests(first: 1) { totalCount } } }"}' \
+            | head -c 2000
+
       - name: Commit cards
         run: |
           git config user.name "github-actions[bot]"
