@@ -1,0 +1,11 @@
+# Local AI tooling artifacts — regenerated on demand, never part of the repo.
+.atl/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/

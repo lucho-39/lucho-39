@@ -1,0 +1,12 @@
+# Keep line endings consistent.
+# This repo is edited from Windows (D:\) and from WSL, and without this rule an
+# editor that writes CRLF makes the whole file look modified in `git status`.
+* text=auto eol=lf
+
+# Binary files must never be normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
